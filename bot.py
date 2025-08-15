@@ -32,7 +32,7 @@ default = DefaultBotProperties(
     )
 
 # Замените "YOUR_BOT_TOKEN" на токен, который вы получили от BotFather
-API_TOKEN = '8260939020:AAFPB8ELzijhICtGLCPd4Tt8Uv52vRCqK3w'
+API_TOKEN = 'YOUR_BOT_TOKEN'
 
 HELP = """
 Вы можете выполнить следующие команды
