@@ -1,0 +1,6 @@
+*.txt
+!requirements.txt
+*credentials.py
+.venv/
+__pycache__/
+

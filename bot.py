@@ -1,15 +1,12 @@
 # bot.py
-#@title Полный код бота для самоконтроля
-
-# id=8260939020
-# 8260939020:AAFPB8ELzijhICtGLCPd4Tt8Uv52vRCqK3w
-# https://core.telegram.org/bots/apihttps://t.me/MDispatcherBot
-# dtQuizBot/@DTQuizHammavetBot/t.me/DTQuizHammavetBot
-# https://t.me/DTQuizHammavetBot
-
+#@title реализация учебного Telegram бота
+# MavetQuizBot / @MavetQuizBot
+# https://t.me/MavetQuizBot
+# git@github.com:IALubyagin/QuizBot.git
 
 import asyncio
 import logging
+import credentials # dotenv пока отложим
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters.command import Command
 from aiogram.enums import ParseMode
@@ -18,7 +15,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from aiogram import F, html
 from datetime import datetime
 from quizstate import create_table, update_quiz, get_quiz_state
-from questions import quiz_data
+from questions import quiz_data, get_current_question
 
 def bold(io):
   return html.bold(str(io))
@@ -26,13 +23,9 @@ def bold(io):
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 
-default = DefaultBotProperties(
-        parse_mode=ParseMode.HTML
-        #
-    )
+default = DefaultBotProperties(parse_mode=ParseMode.HTML)
 
-# Замените "YOUR_BOT_TOKEN" на токен, который вы получили от BotFather
-API_TOKEN = '8260939020:AAFPB8ELzijhICtGLCPd4Tt8Uv52vRCqK3w'
+API_TOKEN = credentials.TOKEN
 
 HELP = """
 Вы можете выполнить следующие команды
@@ -50,18 +43,17 @@ dp = Dispatcher()
 dp["started_at"] = datetime.now().strftime("%Y-%m-%d %H:%M")
 
 
-def generate_options_keyboard(answer_options, right_answer):
+def generate_options_keyboard(current_question):
+  correct_index = current_question['correct_option']
+  opts = current_question['options']
+  right_answer = opts[correct_index]
   builder = InlineKeyboardBuilder()
   i = 0
-  for option in answer_options:
+  for option in opts:
     data = "1" if option == right_answer else "0"
     data += ':' + str(i)
     i += 1
-
-    builder.add(types.InlineKeyboardButton(
-        text=option,
-        callback_data=data)
-    )
+    builder.add(types.InlineKeyboardButton(text=option, callback_data=data))
 
   builder.adjust(1)
   return builder.as_markup()
@@ -70,9 +62,9 @@ async def get_question(message, user_id):
   # Получение текущего вопроса из словаря состояний пользователя
   current_question_index, _ = await get_quiz_state(user_id)
   current_question = quiz_data[current_question_index]
-  correct_index = current_question['correct_option']
-  opts = current_question['options']
-  kb = generate_options_keyboard(opts, opts[correct_index])
+  get_current_question(current_question) #
+
+  kb = generate_options_keyboard(current_question)
   await message.answer(f"{bold(current_question_index + 1)}. {bold(current_question['question'])}",
                        reply_markup=kb)
 
@@ -95,10 +87,11 @@ async def answer(callback: types.CallbackQuery):
   current_question_index, right_answers = await get_quiz_state(chat_id)
 
   current_question = quiz_data[current_question_index]
+
   correct_option = current_question['correct_option']
   options = current_question['options']
-
   right_answer = options[correct_option]
+
   data = callback.data.split(':')
   if data[0] == "1": # right answer
     right_answers += 1
@@ -114,7 +107,7 @@ async def answer(callback: types.CallbackQuery):
   if current_question_index < len(quiz_data):
     await get_question(message, chat_id)
   else:
-    await message.answer(f"Квиз завершен! Ваш результат: правильных ответов {bold(right_answers)}/{current_question_index}")
+    await message.answer(f"Квиз завершен! Ваш результат: {bold(right_answers)} правильных ответов из {current_question_index}")
 
 
 # Хэндлер на команду /start

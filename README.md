@@ -1,15 +1,45 @@
-# Список команд бота dtQuizBot
+# Игровой Telegram бот Quiz Bot для проведения квиза
 
-## -- /start - начало работы
+Список команд:
 
-## -- /quiz - команда начать игру
+- /start - начало работы
 
-## -- /info - вывод дополнительной информации
+- /quiz - команда начать игру
 
-## -- /help - отображение приведенного выше списка
+- /info - вывод дополнительной информации
 
-## Найти нас можно по ссылке (@DTQuizHammavetBot)
+- /help - отображение списка команд
 
-### https://t.me/DTQuizHammavetBot
+Вопросы организованы в виде списка словарей с тремя ключами:
 
-### https://github.com/<...>
+- question - вопрос
+
+- options - варианты ответов
+
+- correct_option - индекс правильного ответа
+
+Состояние процесса игры хранится в базе данных SQLite. Структура таблицы:
+
+```js
+CREATE TABLE quiz_state
+
+(
+
+    user_id INTEGER PRIMARY KEY, --
+
+    question_index INTEGER, --
+
+    right_answers INTEGER --
+
+)
+```
+
+Ссылки:
+
+- @DTQuizHammavetBot
+
+- https://t.me/DTQuizHammavetBot
+
+Установка:
+
+git clone git@github.com:IALubyagin/QuizBot.git

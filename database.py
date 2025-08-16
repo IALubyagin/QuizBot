@@ -1,7 +1,14 @@
+# database.py
+# Объявление и определение класса Database, реализующего асинхронный доступ к базе aiosqlite
+# В текущей версии не используется
+
 import aiosqlite
 import asyncio
 
+#
 class Database:
+  """
+  """
   def __init__(self, db_path):
     self.db_path = db_path
     self.connection = None

@@ -1,6 +1,6 @@
 # questions.py
 
-# Структура квиза
+# Структура квиза: { question, options, correct_option }
 
 quiz_data = [
   {
@@ -54,3 +54,13 @@ quiz_data = [
     'correct_option': 1
   },
 ]
+
+def get_current_question(current_question):
+  correct_index = current_question['correct_option']
+  opts = current_question['options']
+  right_answer = opts[correct_index]
+  i = 0
+  for option in opts:
+    data = "1" if option == right_answer else "0"
+    data += ':' + str(i)
+    i += 1
