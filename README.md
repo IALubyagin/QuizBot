@@ -32,7 +32,7 @@ CREATE TABLE quiz_state
     right_answers INTEGER --
 
 )
-```
+
 
 Ссылки:
 
@@ -43,3 +43,4 @@ CREATE TABLE quiz_state
 Установка:
 
 git clone git@github.com:IALubyagin/QuizBot.git
+```
