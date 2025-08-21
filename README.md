@@ -36,9 +36,9 @@ CREATE TABLE quiz_state
 
 Ссылки:
 
-- @DTQuizHammavetBot
+- @MavetQuizBot
 
-- https://t.me/DTQuizHammavetBot
+- https://t.me/MavetQuizBot
 
 Установка:
 
